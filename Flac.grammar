@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.17">
+    <grammar name="FLAC grammar" start="id:1571" author="shuice" email="cooode@qq.com" fileextension="flac" uti="com.tencent.ios.qqmusic.flac">
+        <description>Grammar for FLAC files</description>
+        <structure name="FLAC" id="1571" length="0" repeatmax="3" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structref name="ID3" id="1573" structure="id:1572"/>
+            <string name="fLaC" id="1574" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue name="fLaC" value="fLaC"/>
+                </fixedvalues>
+            </string>
+            <structref name="METADATA_BLOCK" id="1576" repeatmax="4" structure="id:1575"/>
+        </structure>
+        <structure name="METADATA_BLOCK_HEADER" id="1578" length="0" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="Last-metadata-block flag" id="1579" type="integer" length="1" lengthunit="bit"/>
+            <number name="BLOCK_TYPE" id="1580" type="integer" length="7" lengthunit="bit"/>
+            <number name="BLOCK_LENGTH" id="1581" type="integer" length="24" lengthunit="bit"/>
+        </structure>
+        <structure name="BLOCK_STREAMINFO" id="1583" length="BLOCK_LENGTH" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="MIN_BLOCK_SIZE" id="1584" type="integer" length="16" lengthunit="bit"/>
+            <number name="MAX_BLOCK_SIZE" id="1585" type="integer" length="16" lengthunit="bit"/>
+            <number name="MIN_FRAME_SIZE" id="1586" type="integer" length="24" lengthunit="bit"/>
+            <number name="MAX_FRAME_SIZE" id="1587" type="integer" length="24" lengthunit="bit"/>
+            <number name="SAMPLE_RATE" id="1588" type="integer" length="20" lengthunit="bit"/>
+            <number name="CHANNELS" id="1589" type="integer" length="3" lengthunit="bit"/>
+            <number name="BITS_PER_SAMPLE" id="1590" type="integer" length="5" lengthunit="bit"/>
+            <number name="TOTAL_SAMPLES" id="1591" type="integer" length="36" lengthunit="bit"/>
+            <binary name="MD5" id="1592" length="128" lengthunit="bit"/>
+        </structure>
+        <structure name="ID3" id="1572" length="0" disabled="yes" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <string name="File Identifier" id="1594" type="fixed-length" length="3"/>
+            <number name="version" id="1595" type="integer" length="1"/>
+            <number name="revision" id="1596" type="integer" length="1"/>
+            <number name="size" id="1597" type="integer" length="4" valueexpression="Id3Size"/>
+        </structure>
+        <structure name="METADATA_BLOCK" id="1575" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structref name="METADATA_BLOCK_HEADER" id="1599" structure="id:1578"/>
+            <structref name="BLOCK_STREAMINFO" id="1600" structure="id:1583"/>
+        </structure>
+    </grammar>
+</ufwb>
