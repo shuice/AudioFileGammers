@@ -1,57 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ufwb version="1.17">
-    <grammar name="FLAC grammar" start="id:728" author="shuice" email="cooode@qq.com" fileextension="flac" uti="com.tencent.ios.qqmusic.flac">
+    <grammar name="FLAC grammar" start="id:839" author="shuice" email="cooode@qq.com" fileextension="flac" uti="com.tencent.ios.qqmusic.flac">
         <description>Grammar for FLAC files</description>
-        <structure name="FLAC" id="728" length="0" repeatmax="3" encoding="ISO_8859-1:1987" endian="big" signed="no">
-            <structref name="ID3" id="730" structure="id:729"/>
-            <string name="fLaC" id="731" type="fixed-length" length="4">
+        <structure name="FLAC" id="839" length="0" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structure name="ID3" id="840" repeatmin="0">
+                <binary name="id3header" mustmatch="yes" id="841" length="3">
+                    <fixedvalues>
+                        <fixedvalue name="header" value="494433"/>
+                    </fixedvalues>
+                </binary>
+                <number name="version" id="842" type="integer" length="1"/>
+                <number name="revision" id="843" type="integer" length="1"/>
+                <number name="Flag" id="844" type="integer" length="1"/>
+                <number name="id3Size1" id="845" type="integer" length="1"/>
+                <number name="id3Size2" id="941" type="integer" length="1"/>
+                <number name="id3Size3" id="942" type="integer" length="1"/>
+                <number name="id3Size4" id="943" type="integer" length="1"/>
+                <binary name="id3Data" id="846" length="id3Size1*2097152 + id3Size2*16384+id3Size3*128+id3Size4"/>
+            </structure>
+            <string name="fLaC" id="848" type="fixed-length" length="4">
                 <fixedvalues>
                     <fixedvalue name="fLaC" value="fLaC"/>
                 </fixedvalues>
             </string>
-            <structure name="METADATA_BLOCKS" id="732" repeatmax="4" consists-of="id:733" order="variable">
-                <structref name="METADATA_BLOCK_STREAMINFO" id="735" repeatmin="0" structure="id:734"/>
-                <structref name="METADATA_BLOCK_PADDING" id="824" repeatmin="0" structure="id:817"/>
-                <structref name="METADATA_BLOCK_APPLICATION" id="825" repeatmin="0" structure="id:789"/>
-                <structref name="METADATA_BLOCK_SEEKTABLE" id="737" repeatmin="0" structure="id:736"/>
-                <structref name="METADATA_BLOCK_VORBIS_COMMENT" id="826" repeatmin="0" structure="id:796"/>
-                <structref name="METADATA_BLOCK_CUESHEET" id="827" repeatmin="0" structure="id:803"/>
-                <structref name="METADATA_BLOCK_PICTURE" id="828" repeatmin="0" structure="id:810"/>
+            <structure name="METADATA_BLOCKS" id="849" repeatmax="-1" consists-of="id:850" order="variable">
+                <structref name="METADATA_BLOCK_STREAMINFO" id="852" repeatmin="0" structure="id:851"/>
+                <structref name="METADATA_BLOCK_PADDING" id="854" repeatmin="0" structure="id:853"/>
+                <structref name="METADATA_BLOCK_APPLICATION" id="856" repeatmin="0" structure="id:855"/>
+                <structref name="METADATA_BLOCK_SEEKTABLE" id="858" repeatmin="0" structure="id:857"/>
+                <structref name="METADATA_BLOCK_VORBIS_COMMENT" id="860" repeatmin="0" structure="id:859"/>
+                <structref name="METADATA_BLOCK_CUESHEET" id="862" repeatmin="0" structure="id:861"/>
+                <structref name="METADATA_BLOCK_PICTURE" id="864" repeatmin="0" structure="id:863"/>
             </structure>
-            <structref name="FRAME_HEADER" id="740" structure="id:739"/>
+            <structref name="FRAME_HEADER" id="867" structure="id:866"/>
         </structure>
-        <structure name="ID3" id="729" length="0" disabled="yes" encoding="ISO_8859-1:1987" endian="big" signed="no">
-            <string name="File Identifier" id="742" type="fixed-length" length="3"/>
-            <number name="version" id="743" type="integer" length="1"/>
-            <number name="revision" id="744" type="integer" length="1"/>
-            <number name="size" id="745" type="integer" length="4" valueexpression="Id3Size"/>
+        <structure name="METADATA_BLOCK_BASE" id="850" length="0" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="IS_LAST_BLOCK" id="869" type="integer" length="1" lengthunit="bit"/>
+            <number name="BLOCK_TYPE" id="870" type="integer" length="7" lengthunit="bit"/>
+            <number name="BLOCK_LENGTH" id="871" type="integer" length="24" lengthunit="bit"/>
+            <structure name="BLOCK_DATA" id="872" length="BLOCK_LENGTH"/>
         </structure>
-        <structure name="METADATA_BLOCK_BASE" id="733" length="0" encoding="ISO_8859-1:1987" endian="big" signed="no">
-            <number name="IS_LAST_BLOCK" id="747" type="integer" length="1" lengthunit="bit"/>
-            <number name="BLOCK_TYPE" id="748" type="integer" length="7" lengthunit="bit"/>
-            <number name="BLOCK_LENGTH" id="749" type="integer" length="24" lengthunit="bit"/>
-            <structure name="BLOCK_DATA" id="750" length="BLOCK_LENGTH"/>
+        <structure name="SEEK_POINT" id="875" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="SampleIndex" id="876" type="integer" length="8"/>
+            <number name="Offset" id="877" type="integer" length="8"/>
+            <number name="SampleCount" id="878" type="integer" length="2"/>
         </structure>
-        <structure name="SEEK_POINT" id="753" encoding="ISO_8859-1:1987" endian="big" signed="no">
-            <number name="SampleIndex" id="754" type="integer" length="8"/>
-            <number name="Offset" id="755" type="integer" length="8"/>
-            <number name="SampleCount" id="756" type="integer" length="2"/>
-        </structure>
-        <structure name="FRAME_HEADER" id="739" encoding="ISO_8859-1:1987" endian="big" signed="no">
-            <number name="SyncCode3FFE" id="758" type="integer" length="14" lengthunit="bit" display="hex">
+        <structure name="FRAME_HEADER" id="866" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="SyncCode3FFE" id="880" type="integer" length="14" lengthunit="bit" display="hex">
                 <description>Sync code '11111111111110'</description>
             </number>
-            <number name="Reserved" id="759" type="integer" length="1" lengthunit="bit">
+            <number name="Reserved" id="881" type="integer" length="1" lengthunit="bit">
                 <description>Reserved: [1]
 0 : mandatory value
 1 : reserved for future use</description>
             </number>
-            <number name="BlockingStrategy" id="760" type="integer" length="1" lengthunit="bit">
+            <number name="BlockingStrategy" id="882" type="integer" length="1" lengthunit="bit">
                 <description>Blocking strategy: [2] [3]
 0 : fixed-blocksize stream; frame header encodes the frame number
 1 : variable-blocksize stream; frame header encodes the sample number</description>
             </number>
-            <number name="BlockSize" id="761" type="integer" length="4" lengthunit="bit">
+            <number name="BlockSize" id="883" type="integer" length="4" lengthunit="bit">
                 <description>Block size in inter-channel samples:
 0000 : reserved
 0001 : 192 samples
@@ -60,7 +68,7 @@
 0111 : get 16 bit (blocksize-1) from end of header
 1000-1111 : 256 * (2^(n-8)) samples, i.e. 256/512/1024/2048/4096/8192/16384/32768</description>
             </number>
-            <number name="SampleRate" id="762" type="integer" length="4" lengthunit="bit">
+            <number name="SampleRate" id="884" type="integer" length="4" lengthunit="bit">
                 <description>Sample rate:
 0000 : get from STREAMINFO metadata block
 0001 : 88.2kHz
@@ -79,7 +87,7 @@
 1110 : get 16 bit sample rate (in tens of Hz) from end of header
 1111 : invalid, to prevent sync-fooling string of 1s</description>
             </number>
-            <number name="ChannelAssignment" id="763" type="integer" length="4" lengthunit="bit">
+            <number name="ChannelAssignment" id="885" type="integer" length="4" lengthunit="bit">
                 <description>Channel assignment
 0000-0111 : (number of independent channels)-1. Where defined, the channel order follows SMPTE/ITU-R recommendations. The assignments are as follows:
 1 channel: mono
@@ -95,7 +103,7 @@
 1010 : mid/side stereo: channel 0 is the mid(average) channel, channel 1 is the side(difference) channel
 1011-1111 : reserved</description>
             </number>
-            <number name="SampleSizeInBits" id="764" type="integer" length="3" lengthunit="bit">
+            <number name="SampleSizeInBits" id="886" type="integer" length="3" lengthunit="bit">
                 <description>Sample size in bits:
 000 : get from STREAMINFO metadata block
 001 : 8 bits per sample
@@ -106,66 +114,66 @@
 110 : 24 bits per sample
 111 : reserved</description>
             </number>
-            <number name="Reserved2" id="765" type="integer" length="1" lengthunit="bit"/>
+            <number name="Reserved2" id="887" type="integer" length="1" lengthunit="bit"/>
         </structure>
-        <structure name="METADATA_BLOCK_STREAMINFO" id="734" extends="id:733" encoding="ISO_8859-1:1987" endian="big" signed="no">
-            <number name="BLOCK_TYPE" mustmatch="yes" id="768" type="integer" length="7" lengthunit="bit">
+        <structure name="METADATA_BLOCK_STREAMINFO" id="851" extends="id:850" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="BLOCK_TYPE" mustmatch="yes" id="890" type="integer" length="7" lengthunit="bit">
                 <fixedvalues>
                     <fixedvalue name="type" value="0"/>
                 </fixedvalues>
             </number>
-            <structure name="BLOCK_DATA" id="770" length="BLOCK_LENGTH">
-                <number name="MIN_BLOCK_SIZE" id="771" type="integer" length="16" lengthunit="bit"/>
-                <number name="MAX_BLOCK_SIZE" id="772" type="integer" length="16" lengthunit="bit"/>
-                <number name="MIN_FRAME_SIZE" id="773" type="integer" length="24" lengthunit="bit"/>
-                <number name="MAX_FRAME_SIZE" id="774" type="integer" length="24" lengthunit="bit"/>
-                <number name="SAMPLE_RATE" id="775" type="integer" length="20" lengthunit="bit"/>
-                <number name="CHANNELS" id="776" type="integer" length="3" lengthunit="bit"/>
-                <number name="BITS_PER_SAMPLE" id="777" type="integer" length="5" lengthunit="bit"/>
-                <number name="TOTAL_SAMPLES" id="778" type="integer" length="36" lengthunit="bit"/>
-                <binary name="MD5" id="779" length="128" lengthunit="bit"/>
+            <structure name="BLOCK_DATA" id="891" length="BLOCK_LENGTH">
+                <number name="MIN_BLOCK_SIZE" id="893" type="integer" length="16" lengthunit="bit"/>
+                <number name="MAX_BLOCK_SIZE" id="894" type="integer" length="16" lengthunit="bit"/>
+                <number name="MIN_FRAME_SIZE" id="895" type="integer" length="24" lengthunit="bit"/>
+                <number name="MAX_FRAME_SIZE" id="896" type="integer" length="24" lengthunit="bit"/>
+                <number name="SAMPLE_RATE" id="897" type="integer" length="20" lengthunit="bit"/>
+                <number name="CHANNELS" id="898" type="integer" length="3" lengthunit="bit"/>
+                <number name="BITS_PER_SAMPLE" id="899" type="integer" length="5" lengthunit="bit"/>
+                <number name="TOTAL_SAMPLES" id="900" type="integer" length="36" lengthunit="bit"/>
+                <binary name="MD5" id="901" length="128" lengthunit="bit"/>
             </structure>
         </structure>
-        <structure name="METADATA_BLOCK_PADDING" id="817" extends="id:733">
-            <number name="BLOCK_TYPE" mustmatch="yes" id="819" type="integer" length="7" lengthunit="bit">
+        <structure name="METADATA_BLOCK_PADDING" id="853" extends="id:850">
+            <number name="BLOCK_TYPE" mustmatch="yes" id="905" type="integer" length="7" lengthunit="bit">
                 <fixedvalues>
                     <fixedvalue name="type" value="1"/>
                 </fixedvalues>
             </number>
         </structure>
-        <structure name="METADATA_BLOCK_APPLICATION" id="789" extends="id:733">
-            <number name="BLOCK_TYPE" mustmatch="yes" id="791" type="integer" length="7" lengthunit="bit">
+        <structure name="METADATA_BLOCK_APPLICATION" id="855" extends="id:850">
+            <number name="BLOCK_TYPE" mustmatch="yes" id="911" type="integer" length="7" lengthunit="bit">
                 <fixedvalues>
                     <fixedvalue name="type" value="2"/>
                 </fixedvalues>
             </number>
         </structure>
-        <structure name="METADATA_BLOCK_SEEKTABLE" id="736" extends="id:733">
-            <number name="BLOCK_TYPE" mustmatch="yes" id="783" type="integer" length="7" lengthunit="bit">
+        <structure name="METADATA_BLOCK_SEEKTABLE" id="857" extends="id:850">
+            <number name="BLOCK_TYPE" mustmatch="yes" id="917" type="integer" length="7" lengthunit="bit">
                 <fixedvalues>
                     <fixedvalue name="type" value="3"/>
                 </fixedvalues>
             </number>
-            <structure name="BLOCK_DATA" id="785" length="BLOCK_LENGTH">
-                <structref name="SEEK_POINT" id="786" repeatmin="0" repeatmax="-1" structure="id:753"/>
+            <structure name="BLOCK_DATA" id="918" length="BLOCK_LENGTH">
+                <structref name="SEEK_POINT" id="920" repeatmin="0" repeatmax="-1" structure="id:875"/>
             </structure>
         </structure>
-        <structure name="METADATA_BLOCK_VORBIS_COMMENT" id="796" extends="id:733">
-            <number name="BLOCK_TYPE" mustmatch="yes" id="798" type="integer" length="7" lengthunit="bit">
+        <structure name="METADATA_BLOCK_VORBIS_COMMENT" id="859" extends="id:850">
+            <number name="BLOCK_TYPE" mustmatch="yes" id="924" type="integer" length="7" lengthunit="bit">
                 <fixedvalues>
                     <fixedvalue name="type" value="4"/>
                 </fixedvalues>
             </number>
         </structure>
-        <structure name="METADATA_BLOCK_CUESHEET" id="803" extends="id:733">
-            <number name="BLOCK_TYPE" mustmatch="yes" id="805" type="integer" length="7" lengthunit="bit">
+        <structure name="METADATA_BLOCK_CUESHEET" id="861" extends="id:850">
+            <number name="BLOCK_TYPE" mustmatch="yes" id="930" type="integer" length="7" lengthunit="bit">
                 <fixedvalues>
                     <fixedvalue name="type" value="5"/>
                 </fixedvalues>
             </number>
         </structure>
-        <structure name="METADATA_BLOCK_PICTURE" id="810" extends="id:733">
-            <number name="BLOCK_TYPE" mustmatch="yes" id="812" type="integer" length="7" lengthunit="bit">
+        <structure name="METADATA_BLOCK_PICTURE" id="863" extends="id:850">
+            <number name="BLOCK_TYPE" mustmatch="yes" id="936" type="integer" length="7" lengthunit="bit">
                 <fixedvalues>
                     <fixedvalue name="type" value="6"/>
                 </fixedvalues>
